@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Verification</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #E0E5E9;
+            display: flex;
+            height: 100vh;
+            align-items: center;/*  for optional ata side nav bar ta k fix rakhbe sob page a */
+        }
+
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            margin-left: 350px;
+            margin-bottom: 30px;
+            margin-top: 20px;
+            overflow-y: auto;
+            height: 90vh;
+        }
+
+        h2, h3, h4 {
+            text-align: center;
+            color: #333;
+        }
+
+        h2 {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            margin-top: 20px;
+        }
+
+        h4 {
+            margin: 20px 0;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 5px;
+            background-color: #ddd;
+            border-radius: 3px;
+            position: absolute;
+            top: 50%;
+            left: 0;
+            z-index: 0;
+        }
+
+        .progress-bar {
+            height: 5px;
+            width: 0;
+            background-color: #4fc584;
+            border-radius: 3px;
+            transition: width 0.4s ease;
+            position: absolute;
+            top: 50%;
+            left: 0;
+            z-index: 0;
+            transform: translateY(-50%);
+        }
+
+        .step {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background-color: #ddd;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            color: white;
+            z-index: 1;
+            position: relative;
+        }
+
+        .step.active {
+            background-color: #137c5b;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        /* Button Styles */
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4aae8a;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.5);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        #prevBtn
+        {
+            background-color: rgb(253, 82, 82);
+        }
+        #prevBtn:hover
+        {
+            background-color: red;
+        }
+
+        button:hover {
+            background-color: #17593d;
+            box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        .form-section {
+            display: none;
+            max-height: 60vh;
+            overflow-y: auto;
+            padding-right: 10px; /* Add this line */
+        }
+
+ /*       ScrollBar 1        */
+        
+        .form-section::-webkit-scrollbar {
+            width: 8px;
+            
+        }
+        
+        .form-section::-webkit-scrollbar-track {
+            background-color: transparent;
+            border: 1.5px solid #7e7e7e;
+            border-radius: 8px;
+        }
+        
+        .form-section::-webkit-scrollbar-thumb {
+            background-color: #f1f1f1;
+            border: 2px solid #616161;
+            border-radius: 8px;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        .verification-message {
+            display: none;
+            text-align: center;
+            font-size: 18px;
+            color: #333;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            button {
+                padding: 8px 16px;
+                font-size: 12px;
+            }
+
+            input, select, textarea {
+                padding: 8px;
+                font-size: 12px;
+            }
+        }
+        /* Sidebar Styling */
+        .sidebar {
+            width: 250px;
+            height: 95vh;
+            background-color: #F6F8FA;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-radius: 20px;
+            margin: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo h2 {
+            color: #2C3E50;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            text-align: left;
+        }
+
+        /* Navbar Menu Styling */
+        .menu {
+            list-style: none;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #2C3E50;
+            padding: 15px 10px;
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            /* Smooth transitions */
+            position: relative;
+        }
+
+        .nav-link:hover {
+            background-color: #E3E8EC;
+            color: #1C2B39;
+            /* Hover effect */
+        }
+
+        /* Professional dropdown styling for "View election" */
+        .dropdown {
+            width: 200px;
+            display: none;
+            position: absolute;
+            left: 200px;
+            top: 0;
+            background-color: #FFFFFF;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            padding: 10px;
+            list-style: none;
+            z-index: 1;
+        }
+
+        .dropdown li {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .dropdown li a {
+            text-decoration: none;
+            color: #2C3E50;
+            padding: 10px;
+            display: block;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .dropdown li a:hover {
+            background-color: #E3E8EC;
+            color: #1C2B39;
+        }
+
+        .nav-link.view-election:hover .dropdown {
+            display: block;
+        }
+
+        /* Profile section */
+        .profile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .profile-pic {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        .username {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .email {
+            color: #2C3E50;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+     <!-- Sidebar / Navbar Section -->
+     <div class="sidebar">
+        <div class="logo">
+            <a href="user_dashbord.html" style="text-decoration: none; color: inherit;">
+                <h2>Votadhikar</h2>
+            </a>
+        </div>
+        <ul class="menu">
+            <li><a href="verify.html" class="nav-link"><i class="icon"></i> Verify account</a></li>
+            <li>
+                <div class="nav-link view-election"><i class="icon"></i> View election
+                    <ul class="dropdown">
+                        <!-- Link next page -->
+                        <li><a href="upcoming_election.htm">Upcoming Election</a></li> <!-- Link to upv.htm -->
+                        <li><a href="current_election.htm">Current Election</a></li> <!-- Link to curv.htm -->
+                        <li><a href="past_election.htm">Past Election</a></li> <!-- Link to pastv.htm -->
+                        <li><a href="#">Election FAQS</a></li>
+                    </ul>
+                </div>
+            </li>
+            <li><a href="castvote.html" class="nav-link"><i class="icon"></i> Cast vote</a></li>
+            <li><a href="voting_history.html" class="nav-link"><i class="icon"></i> View voting History</a></li>
+            <li><a href="exit_poll.html" class="nav-link"><i class="icon"></i> Exit poll</a></li>
+            <li><a href="support_help.html" class="nav-link"><i class="icon"></i> Support/help</a></li>
+            <li><a href="index.html" class="nav-link"><i class="icon"></i> Logout</a></li>
+        </ul>
+        <div class="profile">
+            <img src="PHOTO.jpeg" alt="Profile Picture" class="profile-pic">
+            <p class="username">Bitan Ghosh</p>
+            <p class="email">bitanghosh40@gmail.com</p>
+        </div>
+    </div>
+    <div class="container">
+        <h2>Verification Form</h2>
+        
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-bar-bg"></div>
+            <div class="progress-bar"></div>
+            <div class="step active">1</div>
+            <div class="step">2</div>
+            <div class="step">3</div>
+        </div>
+        
+        <!-- Form Section -->
+        <form id="verifyForm">
+            <!-- Section 1: Personal Details -->
+            <div class="form-section active" id="section1">
+                <div class="form-group">
+                    <h3>Personal Details</h3>
+                    <label for="name">Full Name *</label>
+                    <input type="text" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone No *</label>
+                    <input type="tel" id="phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="dob">Date of Birth *</label>
+                    <input type="date" id="dob" required>
+                </div>
+                <div class="form-group">
+                    <label for="aadhar">Aadhar Card No *</label>
+                    <input type="text" id="aadhar" required>
+                </div>
+                <div class="form-group">
+                    <label for="voter">Voter ID No *</label>
+                    <input type="text" id="voter" required>
+                </div>
+                <div class="form-group">
+                    <label for="alternate_email">Alternate email *</label>
+                    <input type="text" id="alternate_email" required>
+                </div>
+                <div class="form-group">
+                    <label for="alternate_ph">Alternate ph no *</label>
+                    <input type="text" id="alternate_ph" required>
+                </div>
+                <div class="form-group">
+                    <label for="security-question" class="form-label">Security Question</label>
+                    <select id="security-question" class="form-input">
+                        <option value="">Select a security question</option>
+                        <option value="pet-name">What is your pet's name?</option>
+                        <option value="birth-city">In what city were you born?</option>
+                        <option value="favorite-book">What is your favorite book?</option>
+                        <option value="favorite-color">What is your favorite color?</option>
+                        <option value="first-school">What was the name of your first school?</option>
+                    </select> 
+                </div>
+                <div class="form-group">
+                    <label for="answare">Answer *</label>
+                    <input type="text" id="answare" required>
+                </div>
+               
+            </div>
+
+            <!-- Section 2: Address Details -->
+            <div class="form-section" id="section2">
+                <h3>Address</h3>
+                <div class="form-group">
+                    <label for="permPost">Howse no/Building name *</label>
+                    <input type="text" id="permPost" required>
+                </div>
+                <div class="form-group">
+                    <label for="permPost">Street?Localitity no *</label>
+                    <input type="text" id="permPost" required>
+                </div>
+                <div class="form-group">
+                    <label for="permPost">Village/Citi *</label>
+                    <input type="text" id="permPost" required>
+                </div>
+                <div class="form-group">
+                    <label for="permPost">Post Office *</label>
+                    <input type="text" id="permPost" required>
+                </div>
+                <div class="form-group">
+                    <label for="permPincode">Ps *</label>
+                    <input type="text" id="permPincode" required>
+                </div>
+                <div class="form-group">
+                    <label for="currVillageCity">District *</label>
+                    <input type="text" id="currVillageCity" required>
+                </div>
+                <div class="form-group">
+                    <label for="currPincode">State or UT *</label>
+                    <input type="text" id="currPincode" required>
+                </div>
+                <div class="form-group">
+                    <label for="permPost">PIN Code *</label>
+                    <input type="text" id="permPost" required>
+                </div>
+            </div>
+
+            <!-- Section 3: Constituency -->
+            <div class="form-section" id="section3">
+                <h3>Constituency</h3>
+                <div class="form-group">
+                    <h4>Parliamentary Constituency</h4>
+                    <label for="parliamentaryConstituencyNo">Constituency Number *</label>
+                    <input type="text" id="parliamentaryConstituencyNo" required>
+                </div>
+                <div class="form-group">
+                    <label for="parliamentaryConstituencyName">Constituency Name *</label>
+                    <input type="text" id="parliamentaryConstituencyName" required>
+                </div>
+                <div class="form-group">
+                    <h4>Assembly Constituency</h4>
+                    <label for="assemblyConstituencyNo">Assembly Constituency Number *</label>
+                    <input type="text" id="assemblyConstituencyNo" required>
+                </div>
+                <div class="form-group">
+                    <label for="assemblyConstituencyName">Assembly Constituency Name *</label>
+                    <input type="text" id="assemblyConstituencyName" required>
+                </div>
+               
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="button-container">
+                <button type="button" id="prevBtn" onclick="prevStep()" style="visibility: hidden;">Previous</button>
+                <button type="button" id="nextBtn" onclick="nextStep()">Next</button>
+                <button type="button" id="submitBtn" onclick="submitForm()" style="display: none;">Verify</button>
+            </div>
+        </form>
+
+<!-- Verification Message Section -->
+<div class="verification-message" id="verificationMessage">
+    <img src="https://img.icons8.com/ios-filled/50/4caf50/checkmark.png" alt="Tick Icon" style="width: 50px; height: 45px; vertical-align: middle;">
+    <h3 style="display: inline-block; margin-left: 10px;">Your account verification is under processing....</h3>
+</div>
+
+<script>
+    let currentStep = 1;
+    const steps = document.querySelectorAll('.step');
+    const progressBar = document.querySelector('.progress-bar');
+    const progressContainer = document.querySelector('.progress-container');
+    const sections = document.querySelectorAll('.form-section');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    const verificationMessage = document.getElementById('verificationMessage');
+
+    function updateFormDisplay() {
+        sections.forEach((section, index) => {
+            section.classList.remove('active');
+            if (index + 1 === currentStep) {
+                section.classList.add('active');
+            }
+        });
+
+        prevBtn.style.visibility = currentStep === 1 ? 'hidden' : 'visible';
+
+        if (currentStep === 3) {
+            nextBtn.style.display = 'none';
+            submitBtn.style.display = 'inline-block';
+        } else {
+            nextBtn.style.display = 'inline-block';
+            submitBtn.style.display = 'none';
+        }
+    }
+
+    function updateProgressBar() {
+        const progressWidth = (currentStep - 1) / (steps.length - 1) * 100;
+        progressBar.style.width = progressWidth + '%';
+
+        steps.forEach((step, index) => {
+            if (index < currentStep) {
+                step.classList.add('active');
+            } else {
+                step.classList.remove('active');
+            }
+        });
+    }
+
+    function nextStep() {
+        if (currentStep < steps.length) {
+            currentStep++;
+            updateFormDisplay();
+            updateProgressBar();
+        }
+    }
+
+    function prevStep() {
+        if (currentStep > 1) {
+            currentStep--;
+            updateFormDisplay();
+            updateProgressBar();
+        }
+    }
+
+    // Handle form submission
+    function submitForm() {
+        // Hide all sections and buttons
+        sections.forEach(section => section.classList.remove('active'));
+        prevBtn.style.display = 'none';
+        nextBtn.style.display = 'none';
+        submitBtn.style.display = 'none';
+
+        // Hide the progress bar upon submission
+        progressContainer.style.display = 'none'; // Hide the progress bar container
+
+        // Show the verification message
+        verificationMessage.style.display = 'block';
+    }
+
+    updateFormDisplay();
+</script>
+
+
+</body>
+</html>

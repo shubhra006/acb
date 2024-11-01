@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voting Page</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #E0E5E9;
+            display: flex;
+            align-items: center;
+            height: 100vh;
+        }
+        
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 500px;
+            position: relative;
+            transition: filter 0.3s;
+            margin-left: 600px;
+            max-height: 650px;
+            overflow: auto;
+        }
+        
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            font-size: 14px;
+            color: #555;
+        }
+       
+        input[type="text"], 
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box; /* Add this line */
+        }
+        
+        /* Candidate List Section */
+        .candidates.hidden {
+            display: none;
+        }
+        
+        .candidate-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .candidate-box {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .candidate-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .candidate-radio {
+            margin-right: 15px;
+        }
+        
+        .candidate-info {
+            margin-left: 20px; /* Adjust as needed */
+            width: 270px; /* Fixed width to ensure consistency */
+        }
+        
+        .candidate-photo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+        
+        .candidate-info h4 {
+            margin: 0;
+            font-size: 16px;
+        }
+        
+        .candidate-info p {
+            margin: 5px 0 0;
+            color: #777;
+            font-size: 14px;
+        }
+        
+        .party-logo {
+           width: 40px;
+           height: 40px;
+           margin-left: auto; /* Aligns logo consistently on the right */
+        }
+        
+        /* Confirmation Box */
+        .confirmation-box, .thankyou-box {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 55%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px;
+            
+        }
+
+        .confirmation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .confirm-btn {
+            background-color: #4CAF50;
+            color: white;
+            margin-top: 10px;
+        }
+
+        .cancel-btn {
+            background-color: #f44336;
+            color: white;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        /* Blur effect when confirmation box is shown */
+        .blurred {
+            filter: blur(5px);
+            pointer-events: none;
+        }
+        .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+}
+.close-btn:hover {
+    color: red;
+}
+.thankyou-box .close-btn {
+    position: absolute;
+    top: -10px; /* Move it slightly above the text */
+    right: 2px; /* Keep it aligned to the right */
+    /* Other styles as needed */
+}
+
+
+/* Sidebar Styling */
+.sidebar {
+            width: 250px;
+            height: 95vh;
+            background-color: #F6F8FA;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-radius: 20px;
+            margin: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: fixed; /*fixed side navbar*/
+        }
+
+        .logo h2 {
+            color: #2C3E50;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            text-align: left;
+        }
+
+        /* Navbar Menu Styling */
+        .menu {
+            list-style: none;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #2C3E50;
+            padding: 15px 10px;
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            /* Smooth transitions */
+            position: relative;
+        }
+
+        .nav-link:hover {
+            background-color: #E3E8EC;
+            color: #1C2B39;
+            /* Hover effect */
+        }
+
+        /* Professional dropdown styling for "View election" */
+        .dropdown {
+            width: 200px;
+            display: none;
+            position: absolute;
+            left: 200px;
+            top: 0;
+            background-color: #FFFFFF;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            padding: 10px;
+            list-style: none;
+            z-index: 1;
+        }
+
+        .dropdown li {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .dropdown li a {
+            text-decoration: none;
+            color: #2C3E50;
+            padding: 10px;
+            display: block;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .dropdown li a:hover {
+            background-color: #E3E8EC;
+            color: #1C2B39;
+        }
+
+        .nav-link.view-election:hover .dropdown {
+            display: block;
+        }
+
+        /* Profile section */
+        .profile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .profile-pic {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        .username {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .email {
+            color: #2C3E50;
+            font-size: 14px;
+        }
+
+
+
+    </style>
+</head>
+<body>
+     <!-- Sidebar / Navbar Section -->
+     <div class="sidebar">
+        <div class="logo">
+            <a href="user_dashbord.html" style="text-decoration: none; color: inherit;">
+                <h2>Votadhikar</h2>
+            </a>
+        </div>
+        <ul class="menu">
+            <li><a href="verify.html" class="nav-link"><i class="icon"></i> Verify account</a></li>
+            <li>
+                <div class="nav-link view-election"><i class="icon"></i> View election
+                    <ul class="dropdown">
+                        <!-- Link next page -->
+                        <li><a href="upcoming_election.htm">Upcoming Election</a></li> <!-- Link to upv.htm -->
+                        <li><a href="current_election.htm">Current Election</a></li> <!-- Link to curv.htm -->
+                        <li><a href="past_election.htm">Past Election</a></li> <!-- Link to pastv.htm -->
+                        <li><a href="#">Election FAQS</a></li>
+                    </ul>
+                </div>
+            </li>
+            <li><a href="castvote.html" class="nav-link"><i class="icon"></i> Cast vote</a></li>
+            <li><a href="voting_history.html" class="nav-link"><i class="icon"></i> View voting History</a></li>
+            <li><a href="exit_poll.html" class="nav-link"><i class="icon"></i> Exit poll</a></li>
+            <li><a href="support_help.html" class="nav-link"><i class="icon"></i> Support/help</a></li>
+            <li><a href="index.html" class="nav-link"><i class="icon"></i> Logout</a></li>
+        </ul>
+        <div class="profile">
+            <img src="PHOTO.jpeg" alt="Profile Picture" class="profile-pic">
+            <p class="username">Bitan Ghosh</p>
+            <p class="email">bitanghosh40@gmail.com</p>
+        </div>
+    </div>
+    <div class="container" id="vote-container">
+        <h2>Cast Vote</h2>
+
+        <!-- Election Selection -->
+        <div class="form-group">
+            <label for="election-name">Select the Election Name:</label>
+            <select id="election-name" onchange="showCandidates()">
+                <option value="" disabled selected>Choose Election</option>
+                <option value="presidential">Presidential Election</option>
+                <option value="parliament">Parliament Election</option>
+                <option value="mayor">Mayor Election</option>
+            </select>
+        </div>
+
+        <!-- Candidate Selection -->
+        <div id="candidates-section" class="form-group candidates hidden">
+            <label>Select The Candidate:</label>
+            <div id="candidate-list" class="candidate-list"></div>
+        </div>
+
+        <!-- ID Card Input -->
+        <div class="form-group">
+            <label for="id-card">Insert your ID card number:</label>
+            <input type="text" id="id-card" placeholder="Enter your ID">
+        </div>
+
+        <!-- Constituency Selection -->
+        <div class="form-group">
+            <label for="constituency">Select your Constituency:</label>
+            <select id="constituency">
+                <option value="" disabled selected>Select Constituency</option>
+                <option value="120">120 - Chunachura</option>
+                <option value="121">121 - Lakhpur</option>
+            </select>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="buttons" style="display: flex; justify-content: space-between;">
+            <button class="cancel-btn" onclick="cancelVote()">Cancel Vote</button>
+            <button class="confirm-btn" onclick="confirmVote()">Confirm Vote</button>
+        </div>
+    </div>
+
+    <!-- Confirmation Box -->
+    <div id="confirmation-box" class="confirmation-box">
+        <p id="confirmation-message"></p>
+        <div class="confirmation-buttons">
+            <button class="cancel-btn" onclick="closeConfirmation()">No</button>
+            <button class="confirm-btn" onclick="castVote()">Yes</button>
+        </div>
+    </div>
+
+    <!-- Thank You Box -->
+    <!-- Thank You Box -->
+<div id="thankyou-box" class="thankyou-box">
+    <button class="close-btn" onclick="closeThankYou()">&#10005;</button> <!-- Close Button Added -->
+    <p>Thank you, your vote has been successfully casted!</p>
+    <button class="confirm-btn" onclick="exitPoll()">Exit Poll</button>
+</div>
+
+
+    <script>
+        const candidates = {
+            presidential: [
+                { name: "Kingkor Bhoumik", party: "AOP", image: "candidate1.jpg", logo: "logo1.png" },
+                { name: "Shubhtajyoti Ghosh", party: "BPM", image: "candidate2.jpg", logo: "logo2.png" },
+                { name: "lima sarkar", party: "XYZ", image: "candidate3.jpg", logo: "logo3.png" }
+            ],
+            parliament: [
+                { name: "Amrita Sen", party: "CPP", image: "candidate3.jpg", logo: "logo3.png" },
+                { name: "Rahul Verma", party: "DLM", image: "candidate4.jpg", logo: "logo4.png" },
+                { name: "Anika Roy", party: "LMN", image: "candidate6.jpg", logo: "logo6.png" },
+                { name: "Anika Roy", party: "LMN", image: "candidate6.jpg", logo: "logo6.png" },
+                { name: "Anika Roy", party: "LMN", image: "candidate6.jpg", logo: "logo6.png" }
+            ],
+            mayor: [
+                { name: "Ravi Singh", party: "XYZ", image: "candidate5.jpg", logo: "logo5.png" },
+                { name: "Anika Roy", party: "LMN", image: "candidate6.jpg", logo: "logo6.png" }
+            ]
+        };
+
+        function showCandidates() {
+            const electionName = document.getElementById('election-name').value;
+            const candidateList = document.getElementById('candidate-list');
+            const candidatesSection = document.getElementById('candidates-section');
+
+            candidateList.innerHTML = '';
+
+            if (candidates[electionName]) {
+                candidates[electionName].forEach((candidate, index) => {
+                    const candidateBox = `
+                        <div class="candidate-box">
+                            <input type="radio" id="candidate${index}" name="candidate" value="${candidate.name}" class="candidate-radio">
+                            <label for="candidate${index}">
+                                <div class="candidate-content">
+                                    <img src="${candidate.image}" alt="${candidate.name}" class="candidate-photo">
+                                    <div class="candidate-info">
+                                        <h4>${candidate.name}</h4>
+                                        <p>Party: ${candidate.party}</p>
+                                    </div>
+                                    <img src="${candidate.logo}" alt="${candidate.party}" class="party-logo">
+                                </div>
+                            </label>
+                        </div>
+                    `;
+                    candidateList.innerHTML += candidateBox;
+                });
+                candidatesSection.classList.remove('hidden');
+            }
+        }
+
+        function confirmVote() {
+            const selectedCandidate = document.querySelector('input[name="candidate"]:checked');
+            if (selectedCandidate) {
+                document.getElementById('confirmation-message').innerText = `Do you want to confirm your vote for ${selectedCandidate.value}?`;
+                document.getElementById('confirmation-box').style.display = 'block';
+                document.getElementById('vote-container').classList.add('blurred');
+            } else {
+                alert('Please select a candidate before confirming.');
+            }
+        }
+        function cancelVote() {
+        // Redirect to index.html
+        window.location.href = "user_dashbord.html";
+    }
+
+        function closeConfirmation() {
+            document.getElementById('confirmation-box').style.display = 'none';
+            document.getElementById('vote-container').classList.remove('blurred');
+        }
+
+        function castVote() {
+            document.getElementById('confirmation-box').style.display = 'none';
+            document.getElementById('thankyou-box').style.display = 'block';
+        }
+
+        function exitPoll() {
+            window.location.href = "cast_vote_exit_poll.html"; // Redirect to thank you or exit page
+        }
+        function closeThankYou() {
+    window.location.href = "user_dashbord.html"; // Redirect to index.html
+}
+
+    </script>
+</body>
+</html>

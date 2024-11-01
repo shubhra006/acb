@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Feedback Form</title>
+    <style>
+          * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #E0E5E9;
+            display: flex;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .contact-form {
+            margin-left: 550px;
+            width: 100%;
+            max-width: 450px;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .contact-form:hover {
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .contact-form h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: #666;
+            margin-bottom: 5px;
+            display: inline-block;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            font-size: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            background-color: #fafafa;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: #007bff;
+            box-shadow: inset 0 2px 6px rgba(0, 123, 255, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* Star Rating Styling */
+        .star-rating {
+            display: flex;
+            justify-content: center;
+            font-size: 24px;
+            color: #ddd;
+            cursor: pointer;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+
+        .star-rating .star {
+            transition: color 0.3s ease;
+        }
+
+        .star-rating .star.selected {
+            color: #FFD700;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+         /* Sidebar Styling */
+         .sidebar {
+            width: 250px;
+            height: 95vh;
+            background-color: #F6F8FA;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-radius: 20px;
+            margin: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: fixed; /*fixed side navbar*/
+        }
+
+        .logo h2 {
+            color: #2C3E50;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            text-align: left;
+        }
+
+        /* Navbar Menu Styling */
+        .menu {
+            list-style: none;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #2C3E50;
+            padding: 15px 10px;
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            /* Smooth transitions */
+            position: relative;
+        }
+
+        .nav-link:hover {
+            background-color: #E3E8EC;
+            color: #1C2B39;
+            /* Hover effect */
+        }
+
+        /* Professional dropdown styling for "View election" */
+        .dropdown {
+            width: 200px;
+            display: none;
+            position: absolute;
+            left: 200px;
+            top: 0;
+            background-color: #FFFFFF;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            padding: 10px;
+            list-style: none;
+            z-index: 1;
+        }
+
+        .dropdown li {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .dropdown li a {
+            text-decoration: none;
+            color: #2C3E50;
+            padding: 10px;
+            display: block;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .dropdown li a:hover {
+            background-color: #E3E8EC;
+            color: #1C2B39;
+        }
+
+        .nav-link.view-election:hover .dropdown {
+            display: block;
+        }
+
+        /* Profile section */
+        .profile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .profile-pic {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        .username {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .email {
+            color: #2C3E50;
+            font-size: 14px;
+        }
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+
+        .modal-content h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .modal-content button {
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .modal-content button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <script>
+ function showModal() {
+            document.getElementById("thankYouModal").style.display = "flex";
+        }
+
+        function goHome() {
+            window.location.href = "user_dashbord.html";
+        }
+
+        // Prevent form submission and show the modal
+        function handleFormSubmit(event) {
+            event.preventDefault();  // Prevent actual form submission
+            showModal();  // Show thank-you modal
+        }
+    </script>
+</head>
+<body>
+    <!-- Sidebar / Navbar Section -->
+    <div class="sidebar">
+        <div class="logo">
+            <a href="user_dashbord.html" style="text-decoration: none; color: inherit;">
+                <h2>Votadhikar</h2>
+            </a>
+        </div>
+        <ul class="menu">
+            <li><a href="verify.html" class="nav-link"><i class="icon"></i> Verify account</a></li>
+            <li>
+                <div class="nav-link view-election"><i class="icon"></i> View election
+                    <ul class="dropdown">
+                        <!-- Link next page -->
+                        <li><a href="upcoming_election.htm">Upcoming Election</a></li> <!-- Link to upv.htm -->
+                        <li><a href="current_election.htm">Current Election</a></li> <!-- Link to curv.htm -->
+                        <li><a href="past_election.htm">Past Election</a></li> <!-- Link to pastv.htm -->
+                        <li><a href="#">Election FAQS</a></li>
+                    </ul>
+                </div>
+            </li>
+            <li><a href="castvote.html" class="nav-link"><i class="icon"></i> Cast vote</a></li>
+            <li><a href="voting_history.html" class="nav-link"><i class="icon"></i> View voting History</a></li>
+            <li><a href="exit_poll.html" class="nav-link"><i class="icon"></i> Exit poll</a></li>
+            <li><a href="support_help.html" class="nav-link"><i class="icon"></i> Support/help</a></li>
+            <li><a href="index.html" class="nav-link"><i class="icon"></i> Logout</a></li>
+        </ul>
+        <div class="profile">
+            <img src="PHOTO.jpeg" alt="Profile Picture" class="profile-pic">
+            <p class="username">Bitan Ghosh</p>
+            <p class="email">bitanghosh40@gmail.com</p>
+        </div>
+    </div>
+  <!-- Contact Form -->
+  <div class="contact-form">
+    <h2>Contact Us</h2>
+    <form action="#" method="post" onsubmit="handleFormSubmit(event)">
+        <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="subject">Subject</label>
+            <input type="text" id="subject" name="subject" required>
+        </div>
+        <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" required></textarea>
+        </div>
+        <button type="submit" class="submit-btn">Send Message</button>
+    </form>
+</div>
+
+<!-- Modal Window -->
+<div class="modal" id="thankYouModal">
+    <div class="modal-content">
+        <h3>Thank you for your support!</h3>
+        <button onclick="goHome()">Go Home</button>
+    </div>
+</div>
+
+</body>
+</html>

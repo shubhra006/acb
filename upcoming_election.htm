@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upcoming Elections</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* General page styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #E0E5E9;
+            display: flex;
+           
+            
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: 250px;
+            height: 95vh;
+            background-color: #F6F8FA;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-radius: 20px;
+            margin: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: fixed; /*fixed side navbar*/
+        }
+
+        .logo h2 {
+            color: #2C3E50;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            text-align: left;
+        }
+
+        /* Navbar Menu Styling */
+        .menu {
+            list-style: none;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #2C3E50;
+            padding: 15px 10px;
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            /* Smooth transitions */
+            position: relative;
+        }
+
+        .nav-link:hover {
+            background-color: #E3E8EC;
+            color: #1C2B39;
+            /* Hover effect */
+        }
+
+        /* Professional dropdown styling for "View election" */
+        .dropdown {
+            width: 200px;
+            display: none;
+            position: absolute;
+            left: 200px;
+            top: 0;
+            background-color: #FFFFFF;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            padding: 10px;
+            list-style: none;
+            z-index: 1;
+        }
+
+        .dropdown li {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .dropdown li a {
+            text-decoration: none;
+            color: #2C3E50;
+            padding: 10px;
+            display: block;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .dropdown li a:hover {
+            background-color: #E3E8EC;
+            color: #1C2B39;
+        }
+
+        .nav-link.view-election:hover .dropdown {
+            display: block;
+        }
+
+        /* Profile section */
+        .profile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .profile-pic {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        .username {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .email {
+            color: #2C3E50;
+            font-size: 14px;
+        }
+
+        .election-container {
+            max-width: 900px;
+            margin-top: 70px;
+            margin-left: 600px;
+            margin-right: auto;
+            margin-bottom: auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .election-box {
+            background-color: #f9f9f9;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .election-box h2 {
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+
+        .election-box p {
+            margin: 5px 0;
+            font-size: 16px;
+        }
+
+        .candidates-list {
+            list-style-type: none;
+            padding-left: 0;
+            margin-top: 15px;
+        }
+
+        .candidate-item {
+    display: flex;
+    align-items: center;
+    background-color: #e9ecef;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    position: relative; /* Added line */
+}
+
+.logo-img {
+    position: absolute;
+    right: 30px;
+    width: 40px;
+}
+.candidate-photo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 60px;
+        }
+        
+        .candidate-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .guidelines {
+            margin-top: 15px;
+        }
+
+        .guidelines h3 {
+            font-size: 18px;
+            color: #343a40;
+            margin-bottom: 8px;
+        }
+
+        .guidelines p {
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        /* Initially hide the hidden election boxes */
+        .hidden-election-boxes {
+            display: none;
+        }
+
+        /* Style the "See More" button */
+        .see-more-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .see-more-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar / Navbar Section -->
+    <div class="sidebar">
+        <div class="logo">
+            <a href="user_dashbord.html" style="text-decoration: none; color: inherit;">
+                <h2>Votadhikar</h2>
+            </a>
+        </div>
+        <ul class="menu">
+            <li><a href="verify.html" class="nav-link"><i class="icon"></i> Verify account</a></li>
+            <li>
+                <div class="nav-link view-election"><i class="icon"></i> View election
+                    <ul class="dropdown">
+                        <!-- Link next page -->
+                        <li><a href="upcoming_election.htm">Upcoming Election</a></li> <!-- Link to upv.htm -->
+                        <li><a href="current_election.htm">Current Election</a></li> <!-- Link to curv.htm -->
+                        <li><a href="past_election.htm">Past Election</a></li> <!-- Link to pastv.htm -->
+                        <li><a href="#">Election FAQS</a></li>
+                    </ul>
+                </div>
+            </li>
+            <li><a href="castvote.html" class="nav-link"><i class="icon"></i> Cast vote</a></li>
+            <li><a href="voting_history.html" class="nav-link"><i class="icon"></i> View voting History</a></li>
+            <li><a href="exit_poll.html" class="nav-link"><i class="icon"></i> Exit poll</a></li>
+            <li><a href="#" class="nav-link"><i class="icon"></i> Support/help</a></li>
+            <li><a href="index.html" class="nav-link"><i class="icon"></i> Logout</a></li>
+        </ul>
+        <div class="profile">
+            <img src="PHOTO.jpeg" alt="Profile Picture" class="profile-pic">
+            <p class="username">Bitan Ghosh</p>
+            <p class="email">bitanghosh40@gmail.com</p>
+        </div>
+    </div>
+    <div class="election-container">
+        <h1>Upcoming Elections</h1>
+
+        <!-- Election 1 -->
+        <div class="election-box">
+            <h2>Election Name: Lok Sabha Election</h2>
+            <p><strong>Type:</strong> Loksabha/Bidhansabha</p>
+            <p><strong>Date:</strong> 15th October 2024</p>
+            <p><strong>Time start:</strong> 9:30 AM</p>
+                <p><strong>Time end:</strong> 9:30 AM</p>
+            <p><strong>Constituency Info:</strong> Constituency Name, No</p>
+            <h3>Candidate Information</h3>
+            <ul class="candidates-list">
+                <li class="candidate-item">
+                    <img src="candidate_photo_johndoe.jpg" alt="Candidate Photo" class="candidate-photo">
+                    <div class="candidate-info">
+                        <span><strong>Name:</strong> John Doe</span>
+                        <span><strong>Party:</strong> Party A</span>
+                    </div>
+                    <img src="party_logo_partyA.jpg" alt="Logo" class="logo-img"> <!-- Add the logo image here -->
+
+                </li>
+                <li class="candidate-item">
+                    <img src="candidate_photo_janesmith.jpg" alt="Candidate Photo" class="candidate-photo">
+                    <div class="candidate-info">
+                        <span><strong>Name:</strong> Jane Smith</span>
+                        <span><strong>Party:</strong> Party B</span>
+                        <img src="party_logo_partyA.jpg" alt="Logo" class="logo-img"> <!-- Add the logo image here -->
+                    </div>
+                </li>
+            </ul>
+
+            <div class="guidelines">
+                <h3>Election Guidelines</h3>
+                <p>Online instructions for voters: Follow all safety protocols while casting votes.</p>
+            </div>
+        </div>
+
+        <!-- Hidden Election Boxes initially -->
+        <div class="hidden-election-boxes">
+            <!-- Election 2 -->
+            <div class="election-box">
+                <h2>Election Name: Assembly Election</h2>
+                <p><strong>Type:</strong> Loksabha/Bidhansabha</p>
+                <p><strong>Date:</strong> 20th October 2024</p>
+                <p><strong>Time start:</strong> 9:30 AM</p>
+                <p><strong>Time end:</strong> 9:30 AM</p>p>
+                <p><strong>Constituency Info:</strong> Constituency Name, No</p>
+
+                <h3>Candidate Information</h3>
+                <ul class="candidates-list">
+                    <li class="candidate-item">
+                        <img src="candidate_photo_johndoe.jpg" alt="Candidate Photo" class="candidate-photo">
+                        <div class="candidate-info">
+                            <span><strong>Name:</strong> John Doe</span>
+                            <span><strong>Party:</strong> Party A</span>
+                        </div>
+                        <img src="party_logo_partyA.jpg" alt="Logo" class="logo-img"> <!-- Add the logo image here -->
+    
+                    </li>
+                    <li class="candidate-item">
+                        <img src="candidate_photo_janesmith.jpg" alt="Candidate Photo" class="candidate-photo">
+                        <div class="candidate-info">
+                            <span><strong>Name:</strong> Jane Smith</span>
+                            <span><strong>Party:</strong> Party B</span>
+                            <img src="party_logo_partyA.jpg" alt="Logo" class="logo-img"> <!-- Add the logo image here -->
+                        </div>
+                    </li>
+                    <li class="candidate-item">
+                        <img src="candidate_photo_janesmith.jpg" alt="Candidate Photo" class="candidate-photo">
+                        <div class="candidate-info">
+                            <span><strong>Name:</strong> Jane Smith</span>
+                            <span><strong>Party:</strong> Party B</span>
+                            <img src="party_logo_partyA.jpg" alt="Logo" class="logo-img"> <!-- Add the logo image here -->
+                        </div>
+                        <li class="candidate-item">
+                            <img src="candidate_photo_janesmith.jpg" alt="Candidate Photo" class="candidate-photo">
+                            <div class="candidate-info">
+                                <span><strong>Name:</strong> Jane Smith</span>
+                                <span><strong>Party:</strong> Party B</span>
+                                <img src="party_logo_partyA.jpg" alt="Logo" class="logo-img"> <!-- Add the logo image here -->
+                            </div>
+                        </li>
+                        <li class="candidate-item">
+                            <img src="candidate_photo_janesmith.jpg" alt="Candidate Photo" class="candidate-photo">
+                            <div class="candidate-info">
+                                <span><strong>Name:</strong> Jane Smith</span>
+                                <span><strong>Party:</strong> Party B</span>
+                                <img src="party_logo_partyA.jpg" alt="Logo" class="logo-img"> <!-- Add the logo image here -->
+                            </div>
+                        </li>
+                    </li>
+                </ul>
+
+                <div class="guidelines">
+                    <h3>Election Guidelines</h3>
+                    <p>Online instructions for voters: Please carry your voter ID for verification.</p>
+                </div>
+            </div>
+            <!-- Election 3 -->
+            <div class="election-box">
+                <h2>Election Name: State Council Election</h2>
+                <p><strong>Type:</strong> Loksabha/Bidhansabha</p>
+                <p><strong>Date:</strong> 25th October 2024</p>
+                <p><strong>Time start:</strong> 9:30 AM</p>
+                <p><strong>Time end:</strong> 9:30 AM</p>
+
+
+                <p><strong>Constituency Info:</strong> Constituency Name, No</p>
+
+                <h3>Candidate Information</h3>
+                <ul class="candidates-list">
+                    <li class="candidate-item">
+                        <img src="candidate_photo_johndoe.jpg" alt="Candidate Photo" class="candidate-photo">
+                        <div class="candidate-info">
+                            <span><strong>Name:</strong> John Doe</span>
+                            <span><strong>Party:</strong> Party A</span>
+                        </div>
+                        <img src="party_logo_partyA.jpg" alt="Logo" class="logo-img"> <!-- Add the logo image here -->
+    
+                    </li>
+                    <li class="candidate-item">
+                        <img src="candidate_photo_janesmith.jpg" alt="Candidate Photo" class="candidate-photo">
+                        <div class="candidate-info">
+                            <span><strong>Name:</strong> Jane Smith</span>
+                            <span><strong>Party:</strong> Party B</span>
+                            <img src="party_logo_partyA.jpg" alt="Logo" class="logo-img"> <!-- Add the logo image here -->
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="guidelines">
+                    <h3>Election Guidelines</h3>
+                    <p>Please ensure to follow voting safety guidelines.</p>
+                </div>
+            </div>
+
+
+            <!-- You can add more election boxes here -->
+        </div>
+
+        <!-- See More Button -->
+        <button class="see-more-btn" onclick="showMore()">See More</button>
+    </div>
+
+    <script>
+        function showMore() {
+            const hiddenBoxes = document.querySelector('.hidden-election-boxes');
+            hiddenBoxes.style.display = 'block';
+            document.querySelector('.see-more-btn').style.display = 'none'; // Hide the button after click
+        }
+    </script>
+</body>
+
+</html>

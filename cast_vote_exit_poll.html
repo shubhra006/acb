@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exit Poll Page</title>
+    <style>
+        /* style.css */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #E0E5E9;
+    display: flex;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    transition: filter 0.3s ease;
+}
+
+.container.blur-background {
+    filter: blur(5px);
+}
+
+
+.container {
+    background-color: #ffffff;
+    padding: 20px 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 500px;
+    width: 100%;
+    margin-left: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.description {
+    font-size: 1em;
+    color: #555;
+    margin-bottom: 20px;
+    line-height: 1.5;
+    background-color: #eef;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: 500;
+}
+
+label {
+    font-size: 0.9em;
+    color: #333;
+    margin-top: 10px;
+    display: block;
+}
+
+select, textarea, .submit-btn {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 0.9em;
+}
+
+select:focus, textarea:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.checkbox-group, .rating-group {
+    margin: 10px 0;
+}
+
+.checkbox-group label, .rating-group label {
+    display: block;
+    font-size: 0.9em;
+    color: #555;
+    margin-top: 5px;
+}
+
+textarea {
+    resize: vertical;
+}
+
+.submit-btn {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    margin-top: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Candidate Selection Styling */
+.candidate-section {
+    margin-top: 15px;
+}
+
+.candidate-box {
+    display: flex;
+    flex-direction: column;
+    max-height: 150px;
+    overflow-y: auto;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.candidate-box label {
+    display: flex;
+    align-items: center;
+    font-size: 0.9em;
+    margin: 5px 0;
+    cursor: pointer;
+}
+
+.candidate-box img {
+    width: 35px;
+    height: 35px;
+    margin-right: 10px;
+    border-radius: 50%;
+    border: 1px solid #ddd;
+}
+
+/* Thank You Message Overlay */
+.thank-you-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+.thank-you-content {
+    background: white;
+    padding: 20px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.thank-you-content p {
+    font-size: 1.2em;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.thank-you-content button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+.thank-you-content button:hover {
+    background-color: #0056b3;
+}
+.invalid {
+    border: 2px solid red;
+}
+ /* Sidebar Styling */
+ .sidebar {
+            width: 250px;
+            height: 95vh;
+            background-color: #F6F8FA;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-radius: 20px;
+            margin: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: fixed; /*fixed side navbar*/
+        }
+
+        .logo h2 {
+            color: #2C3E50;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            text-align: left;
+        }
+
+        /* Navbar Menu Styling */
+        .menu {
+            list-style: none;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #2C3E50;
+            padding: 15px 10px;
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            /* Smooth transitions */
+            position: relative;
+        }
+
+        .nav-link:hover {
+            background-color: #E3E8EC;
+            color: #1C2B39;
+            /* Hover effect */
+        }
+
+        /* Professional dropdown styling for "View election" */
+        .dropdown {
+            width: 200px;
+            display: none;
+            position: absolute;
+            left: 200px;
+            top: 0;
+            background-color: #FFFFFF;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            padding: 10px;
+            list-style: none;
+            z-index: 1;
+        }
+
+        .dropdown li {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .dropdown li a {
+            text-decoration: none;
+            color: #2C3E50;
+            padding: 10px;
+            display: block;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .dropdown li a:hover {
+            background-color: #E3E8EC;
+            color: #1C2B39;
+        }
+
+        .nav-link.view-election:hover .dropdown {
+            display: block;
+        }
+
+        /* Profile section */
+        .profile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .profile-pic {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        .username {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .email {
+            color: #2C3E50;
+            font-size: 14px;
+        }
+
+    </style>
+</head>
+<body>
+      <!-- Sidebar / Navbar Section -->
+      <div class="sidebar">
+        <div class="logo">
+            <a href="user_dashbord.html" style="text-decoration: none; color: inherit;">
+                <h2>Votadhikar</h2>
+            </a>
+        </div>
+        <ul class="menu">
+            <li><a href="verify.html" class="nav-link"><i class="icon"></i> Verify account</a></li>
+            <li>
+                <div class="nav-link view-election"><i class="icon"></i> View election
+                    <ul class="dropdown">
+                        <!-- Link next page -->
+                        <li><a href="upcoming_election.htm">Upcoming Election</a></li> <!-- Link to upv.htm -->
+                        <li><a href="current_election.htm">Current Election</a></li> <!-- Link to curv.htm -->
+                        <li><a href="past_election.htm">Past Election</a></li> <!-- Link to pastv.htm -->
+                        <li><a href="#">Election FAQS</a></li>
+                    </ul>
+                </div>
+            </li>
+            <li><a href="castvote.html" class="nav-link"><i class="icon"></i> Cast vote</a></li>
+            <li><a href="voting_history.html" class="nav-link"><i class="icon"></i> View voting History</a></li>
+            <li><a href="exit_poll.html" class="nav-link"><i class="icon"></i> Exit poll</a></li>
+            <li><a href="support_help.html" class="nav-link"><i class="icon"></i> Support/help</a></li>
+            <li><a href="index.html" class="nav-link"><i class="icon"></i> Logout</a></li>
+        </ul>
+        <div class="profile">
+            <img src="PHOTO.jpeg" alt="Profile Picture" class="profile-pic">
+            <p class="username">Bitan Ghosh</p>
+            <p class="email">bitanghosh40@gmail.com</p>
+        </div>
+    </div>
+    <div class="container">
+        <div class="description">
+            <p>Thank you for voting! 🎉</p>
+            <p>Please take a moment to participate in this poll. Your response will help us understand voter preferences, and your details will remain <strong>completely anonymous.</strong></p>
+        </div>
+        
+        <form id="pollForm">
+            <!-- Select Election -->
+            <label for="election">Select Election</label>
+            <select id="election" name="election" onchange="showCandidates()">
+                <option value="" disabled selected>Select Election</option>
+                <option value="national">National Election</option>
+                <option value="state">State Election</option>
+            </select>
+
+            <!-- Select Constituency -->
+            <label for="constituency">Select Constituency</label>
+            <select id="constituency" name="constituency">
+                <option value="" disabled selected>Select Constituency</option>
+                <option value="chuchura">Chuchura</option>
+                <option value="pandua">Pandua</option>
+            </select>
+
+            <!-- Select Candidate (Initially Hidden) -->
+            <div id="candidateSection" class="candidate-section" style="display: none;">
+                <label for="candidate">Select the candidate you voted for</label>
+                <div class="candidate-box">
+                    <label>
+                        <input type="radio" name="candidate" value="candidate1">
+                        <img src="candidate1_logo.png" alt="Candidate 1 Logo">
+                        Candidate 1 (Party A)
+                    </label>
+                    <label>
+                        <input type="radio" name="candidate" value="candidate2">
+                        <img src="candidate2_logo.png" alt="Candidate 2 Logo">
+                        Candidate 2 (Party B)
+                    </label>
+                    <label>
+                        <input type="radio" name="candidate" value="candidate3">
+                        <img src="candidate3_logo.png" alt="Candidate 3 Logo">
+                        Candidate 3 (Party C)
+                    </label>
+                    <label>
+                        <input type="radio" name="candidate" value="candidate4">
+                        <img src="candidate4_logo.png" alt="Candidate 4 Logo">
+                        Candidate 4 (Party D)
+                    </label>
+                </div>
+            </div>
+
+            <!-- Influencing Issues -->
+            <p>What was the issue influencing your vote?</p>
+            <div class="checkbox-group">
+                <label><input type="checkbox" name="issue" value="economy"> Economy</label>
+                <label><input type="checkbox" name="issue" value="education"> Education</label>
+                <label><input type="checkbox" name="issue" value="healthcare"> Healthcare</label>
+                <label><input type="checkbox" name="issue" value="environment"> Environment</label>
+                <label><input type="checkbox" name="issue" value="other"> Other (please specify)</label>
+            </div>
+
+            <!-- Satisfaction Rating -->
+            <p>How satisfied are you with the voting process?</p>
+            <div class="rating-group">
+                <label><input type="radio" name="satisfaction" value="1"> Very Unsatisfied</label>
+                <label><input type="radio" name="satisfaction" value="2"> Unsatisfied</label>
+                <label><input type="radio" name="satisfaction" value="3"> Neutral</label>
+                <label><input type="radio" name="satisfaction" value="4"> Satisfied</label>
+                <label><input type="radio" name="satisfaction" value="5"> Very Satisfied</label>
+            </div>
+
+            <!-- Comments -->
+            <label for="comments">Comments (optional)</label>
+            <textarea id="comments" name="comments" rows="4" placeholder="Write your comments here..."></textarea>
+
+            <!-- Submit Button -->
+            <button type="button" class="submit-btn" onclick="validateForm()">Submit</button>
+
+        </form>
+    </div>
+
+    <!-- Thank You Message Overlay -->
+    <div id="thankYouMessage" class="thank-you-overlay" style="display: none;">
+        <div class="thank-you-content">
+            <p>Thank you for your support!</p>
+            <button onclick="goHome()">Home</button>
+        </div>
+    </div>
+
+    <script>
+        function showCandidates() {
+            document.getElementById('candidateSection').style.display = 'block';
+        }
+
+        function validateForm() {
+            let isValid = true;
+            const election = document.getElementById('election');
+            const constituency = document.getElementById('constituency');
+            const candidateRadios = document.querySelectorAll('input[name="candidate"]');
+
+            // Reset borders
+            election.classList.remove('invalid');
+            constituency.classList.remove('invalid');
+            candidateRadios.forEach(radio => radio.parentElement.classList.remove('invalid'));
+
+            // Check if an election is selected
+            if (!election.value) {
+                election.classList.add('invalid');
+                isValid = false;
+            }
+
+            // Check if a constituency is selected
+            if (!constituency.value) {
+                constituency.classList.add('invalid');
+                isValid = false;
+            }
+
+            // Check if a candidate is selected
+            const candidateSelected = Array.from(candidateRadios).some(radio => radio.checked);
+            if (!candidateSelected) {
+                candidateRadios.forEach(radio => radio.parentElement.classList.add('invalid'));
+                isValid = false;
+            }
+
+            if (isValid) {
+                showThankYouMessage();
+            }
+        }
+
+        function showThankYouMessage() {
+            document.getElementById('thankYouMessage').style.display = 'flex';
+            document.querySelector('.container').classList.add('blur-background');
+        }
+
+        function goHome() {
+            document.getElementById('thankYouMessage').style.display = 'none';
+            document.body.classList.remove('blur-background');
+            window.location.href = "user_dashbord.html";  // Adjust to your home page URL
+        }
+    </script>
+</body>
+</html>

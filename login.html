@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voting Portal</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #E0E5E9;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+
+}
+
+.main-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    flex-grow: 1;
+}
+
+.side-image {
+    max-width: 70%;
+    height: auto;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+    /* Make side image responsive */
+    .side-image {
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    /* Adjust login container for smaller screens */
+    .login-container {
+        width: 90%; /* Set width to 90% of screen */
+        margin: 20px auto; /* Center and add vertical space */
+    }
+
+    /* Stack layout vertically */
+    .main-container {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+
+.login-container {
+    background-color: #ffffff;
+    padding: 30px;
+    margin-left: 50px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 24%;/*  age chilo 350px */
+    margin-bottom: 80px; /*  Adjust the value as needed */
+    margin-top: 80px;
+}
+
+
+
+.login-container h2 {
+    text-align: center;
+    margin-bottom: 10px;
+    color: #009688;
+}
+
+.login-container label {
+    font-size: 14px;
+    color: #333;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.login-container input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.login-container button {
+    width: 100%;
+    padding: 10px;
+    background-color: #009688;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.login-container button:hover {
+    background-color: #00796b;
+}
+
+.captcha-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.captcha-box img {
+    height: 50px;
+}
+.refresh-btn{
+    margin-left: 20px;
+    margin-right: 600px;
+}
+
+.captcha-box .refresh-btn {
+    background-color: #00796b;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.captcha-box .refresh-btn:hover {
+    background-color: #005f50;
+}
+
+.extra-links {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.extra-links a {
+    font-size: 12px;
+    color: #00796b;
+    text-decoration: none;
+}
+
+.extra-links a:hover {
+    text-decoration: underline;
+}
+
+footer {
+    background-color: #009688;
+    padding: 20px;
+    text-align: center;
+    color: white;
+}
+ /* for nav bar*/
+
+ header {
+            background-color: #009688;
+            padding: 10px 0;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .nav-links {
+            list-style-type: none;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links li {
+            position: relative;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            transition: color 0.3s ease;
+            padding: 8px 12px;
+            display: block;
+        }
+
+        .nav-links a:hover {
+            color: #ffeb3b;
+        }
+
+        .login-btn {
+            background-color: #ffeb3b;
+            color: #009688;
+            padding: 8px 16px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .login-btn:hover {
+            background-color: #fff176;
+        }
+
+        /* Dropdown Styling */
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            background-color: #00796b;
+            min-width: 160px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            border-radius: 4px;
+            flex-direction: column;
+            transition: all 0.3s ease-in-out;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        .dropdown-menu li {
+            list-style: none;
+        }
+
+        .dropdown-menu li a {
+            color: white;
+            padding: 10px 16px;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.3s ease;
+        }
+
+        .dropdown-menu li a:hover {
+            background-color: #004d40;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Dropdown hover animation */
+        .dropdown:hover .dropdown-menu {
+            display: block;
+            animation: dropdownFadeIn 0.3s ease forwards;
+        }
+
+        @keyframes dropdownFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+          /* Footer Styling */
+
+          footer {
+            background-color: #1c1c1c;
+            color: #fff;
+            padding: 40px 0;
+        }
+
+        .footer-container {
+    display: flex;
+    justify-content: space-around; /* Keeps columns spaced out */
+    flex-wrap: wrap;
+    padding: 0 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: left; /* Ensures all text aligns to the left */
+}
+
+.footer-column {
+    flex: 1;
+    margin: 20px;
+    min-width: 200px;
+    text-align: left; /* Ensures content aligns to the left within each column */
+}
+
+
+        .footer-column h4 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #555;
+            padding-bottom: 10px;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 12px;
+        }
+
+        .footer-column ul li a {
+            color: #bbb;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-column ul li a:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+
+        .social-column .social-icons {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 150px;
+        }
+
+        .social-icons a {
+            width: 24px;
+            height: 24px;
+            transition: transform 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            transform: scale(1.2);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding: 20px;
+            background-color: #111;
+            color: #777;
+            font-size: 14px;
+            margin-top: 30px;
+        }
+
+        .footer-bottom p {
+            margin: 0;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            padding: 5px;
+            margin-right: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .footer-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .footer-column {
+                margin-bottom: 30px;
+            }
+
+            .social-icons {
+                justify-content: center;
+            }
+        }
+
+    </style>
+   
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="nav-container">
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#">Registration</a></li>
+                    <li><a href="#">Cast Vote</a></li>
+                    <li><a href="#">Exit Poll</a></li>
+                    <li><a href="result.html">Result</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle">Contact & Support</a>
+                        <ul class="dropdown-menu">
+                        <li><a href="faq.html">FAQ</a></li>
+                        <li><a href="contact.html">Contact Us </a></li>
+                        <li><a href="feedback.html">Feedback</a></li>
+                        <li><a href="Support.html">Support</a></li>
+                    </ul>
+                    </li>
+                </ul>
+                <a href="login.html" class="login-btn">Login</a>
+            </div>
+        </nav>
+    </header>
+    <div class="main-container">
+        <div class="login-container">
+            <h2>Login</h2>
+            <form action="user_dashbord.html">
+                <div class="input-box">
+                    <label for="aadhaar">Aadhaar Number</label>
+                    <input type="text" id="aadhaar" name="aadhaar" required>
+                </div>
+                <div class="input-box">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="input-box">
+                    <label for="captcha">Enter Captcha</label>
+                    <input type="text" id="captcha" name="captcha" required>
+                    <div class="captcha-box">
+                        <img src="captcha-image.jpg" alt="Captcha">
+                        <button type="button" class="refresh-btn">Refresh</button>
+                    </div>
+                </div>
+                <div class="input-box">
+                    <form action="userlog.html">
+                        <button type="submit" class="login-btn">Log In</button>
+                    </form>
+                </div>
+            </form>
+            <div class="extra-links">
+                <a href="registration.html">New to votadhikar? Sign Up</a> |
+                <a href="#">Forgot Password?</a>
+            </div>
+            
+        </div>
+         <!-- Add the image beside the login box -->
+         <img src="Untitled-removebg.png" alt="Description of image" class="side-image">
+        
+    </div>
+    <!--footer-->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-column">
+                <h4>Contact</h4>
+                <ul>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Phone: +123456789</a></li>
+                    <li><a href="mailto:example@example.com">Email: example@example.com</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Terms & Conditions</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Copyright Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#">Help</a></li>
+                    <li><a href="#">Disclaimer</a></li>
+                    <li><a href="#">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-column social-column">
+                <h4>Follow Us</h4>
+                <div class="social-icons">
+                    <a href="#"><i class='bx bxl-facebook-circle' style='color:#fdffff'></i></a>
+                    <a href="#"><i class='bx bxl-github' style='color:#fbfcfc'></i></a>
+                    <a href="#"><i class='bx bxl-instagram' style='color:#f4f7f7'></i></a>
+                    <a href="#"><i class='bx bxl-linkedin' style='color:#fafcfc'></i></a>
+                    <a href="#"><i class='bx bxl-twitter' style='color:#f8fafa'></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 VOTADHIKAR. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

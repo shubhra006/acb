@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voting History</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #E0E5E9;
+            display: flex;
+            height: 100vh;
+            align-items: center;/*  for optional ata side nav bar ta k fix rakhbe sob page a */
+        }
+        
+        /* Sidebar Styling */
+        .sidebar {
+            width: 250px;
+            height: 95vh;
+            background-color: #F6F8FA;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-radius: 20px;
+            margin: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: fixed; /*fixed side navbar*/
+        }
+
+        .logo h2 {
+            color: #2C3E50;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            text-align: left;
+        }
+
+        /* Navbar Menu Styling */
+        .menu {
+            list-style: none;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #2C3E50;
+            padding: 15px 10px;
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            /* Smooth transitions */
+            position: relative;
+        }
+
+        .nav-link:hover {
+            background-color: #E3E8EC;
+            color: #1C2B39;
+            /* Hover effect */
+        }
+
+        /* Professional dropdown styling for "View election" */
+        .dropdown {
+            width: 200px;
+            display: none;
+            position: absolute;
+            left: 200px;
+            top: 0;
+            background-color: #FFFFFF;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            padding: 10px;
+            list-style: none;
+            z-index: 1;
+        }
+
+        .dropdown li {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .dropdown li a {
+            text-decoration: none;
+            color: #2C3E50;
+            padding: 10px;
+            display: block;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .dropdown li a:hover {
+            background-color: #E3E8EC;
+            color: #1C2B39;
+        }
+
+        .nav-link.view-election:hover .dropdown {
+            display: block;
+        }
+
+        /* Profile section */
+        .profile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .profile-pic {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        .username {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .email {
+            color: #2C3E50;
+            font-size: 14px;
+        }
+
+        
+
+        .history-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 800px;
+            margin-left: 450px;
+            margin-bottom: 30px;
+            margin-top: 50px;
+            overflow-y: auto;
+            height: 50vh;
+            
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+    
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .history-table th,
+        .history-table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+            font-size: 16px;
+        }
+
+        .history-table th {
+            background-color: #f0f0f5;
+            color: #333;
+        }
+
+        .history-table td {
+            background-color: #fff;
+        }
+
+        .history-table tr:nth-child(even) td {
+            background-color: #f9f9f9;
+        }
+
+        /* Style for the complete status */
+        .status-complete {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #28a745;
+            color: white;
+            border-radius: 15px;
+            font-weight: bold;
+        }
+
+        /* See More button */
+        .see-more-container {
+            text-align: left;
+        }
+
+        /* See More button - improved design */
+        #see-more {
+            padding: 12px 25px;
+            background: linear-gradient(45deg, #007bff, #00bfff);
+            /* Gradient background */
+            color: white;
+            border: none;
+            border-radius: 25px;
+            /* Rounded corners */
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            /* Soft shadow for depth */
+            transition: all 0.3s ease;
+        }
+
+        #see-more:hover {
+            background: linear-gradient(45deg, #0056b3, #0099cc);
+            /* Darker gradient on hover */
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+            /* Larger shadow on hover */
+            transform: translateY(-2px);
+            /* Slight lift on hover */
+        }
+
+        #see-more:active {
+            transform: translateY(1px);
+            /* Button presses down slightly when clicked */
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+            /* Less shadow when active */
+        }
+
+
+        /* No more history message */
+        #no-more-history {
+            margin-top: 10px;
+            color: red;
+            font-style: italic;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Style for the not completed status */
+        .status-not-complete {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #facd47;
+            /* Yellow for "Not Completed" */
+            color: white;
+            border-radius: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+     <!-- Sidebar / Navbar Section -->
+     <div class="sidebar">
+        <div class="logo">
+            <a href="user_dashbord.html" style="text-decoration: none; color: inherit;">
+                <h2>Votadhikar</h2>
+            </a>
+        </div>
+        <ul class="menu">
+            <li><a href="verify.html" class="nav-link"><i class="icon"></i> Verify account</a></li>
+            <li>
+                <div class="nav-link view-election"><i class="icon"></i> View election
+                    <ul class="dropdown">
+                        <!-- Link next page -->
+                        <li><a href="upcoming_election.htm">Upcoming Election</a></li> <!-- Link to upv.htm -->
+                        <li><a href="current_election.htm">Current Election</a></li> <!-- Link to curv.htm -->
+                        <li><a href="past_election.htm">Past Election</a></li> <!-- Link to pastv.htm -->
+                        <li><a href="#">Election FAQS</a></li>
+                    </ul>
+                </div>
+            </li>
+            <li><a href="castvote.html" class="nav-link"><i class="icon"></i> Cast vote</a></li>
+            <li><a href="voting_history.html" class="nav-link"><i class="icon"></i> View voting History</a></li>
+            <li><a href="exit_poll.html" class="nav-link"><i class="icon"></i> Exit poll</a></li>
+            <li><a href="support_help.html" class="nav-link"><i class="icon"></i> Support/help</a></li>
+            <li><a href="index.html" class="nav-link"><i class="icon"></i> Logout</a></li>
+        </ul>
+        <div class="profile">
+            <img src="PHOTO.jpeg" alt="Profile Picture" class="profile-pic">
+            <p class="username">Bitan Ghosh</p>
+            <p class="email">bitanghosh40@gmail.com</p>
+        </div>
+    </div>
+    <div class="history-container">
+        <h2>Voting History</h2>
+        <div class="history-scroll">
+            <table class="history-table">
+                <thead>
+                    <tr>
+                        <th>Election Name</th>
+                        <th>Date Voted</th>
+                        <th>Candidate Voted For</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="history-data">
+                    <tr>
+                        <td>Lok Sabha 2024</td>
+                        <td>24-May-2024</td>
+                        <td>Candidate Name (Party)</td>
+                        <td><span class="status-complete">Complete</span></td>
+                    </tr>
+                    <!-- More rows will be added here -->
+                </tbody>
+            </table>
+        </div>
+        <div class="see-more-container">
+            <button id="see-more">See More</button>
+        </div>
+        <p id="no-more-history" class="hidden">No more history</p>
+    </div>
+
+    <script>
+        let historyLoaded = false;  // Example condition to check if more history exists
+
+        document.getElementById('see-more').addEventListener('click', function () {
+            if (!historyLoaded) {
+                const newRow = `
+        <tr>
+            <td>State Elections 2024</td>
+            <td>05-Jun-2024</td>
+            <td>Another Candidate (Party)</td>
+            <td><span class="status-complete">Complete</span></td>
+        </tr>
+        
+        <tr>
+    <td>Local Elections 2024</td>
+    <td>12-Jun-2024</td>
+    <td>Candidate Y (Party)</td>
+    <td><span class="status-not-complete">Not Completed</span></td>
+      </tr>
+         `;
+
+                document.getElementById('history-data').insertAdjacentHTML('beforeend', newRow);
+                historyLoaded = true;  // Set this to true once more history is loaded
+            } else {
+                // If no more history to load
+                document.getElementById('no-more-history').classList.remove('hidden');
+            }
+        });
+
+    </script>
+</body>
+
+</html>
